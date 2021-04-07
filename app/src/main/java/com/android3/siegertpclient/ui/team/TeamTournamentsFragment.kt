@@ -1,5 +1,6 @@
 package com.android3.siegertpclient.ui.team
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import com.android3.siegertpclient.data.invitation.Invitation
 import com.android3.siegertpclient.data.tournament.Tournament
 import com.android3.siegertpclient.data.user.User
 import com.android3.siegertpclient.databinding.FragmentTeamtournamentsBinding
+import com.android3.siegertpclient.ui.homepage.HomepageActivity
 import com.android3.siegertpclient.utils.LocalCache
 import com.android3.siegertpclient.utils.recyclerviewadapters.TournamentAdapter
 
@@ -61,8 +63,17 @@ class TeamTournamentsFragment : Fragment(), TeamContract.ITeamView, TournamentAd
         TODO("Not yet implemented")
     }
 
+    override fun navigateToHomepageActivity() {
+        val intent = Intent(activity, HomepageActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun showDeleteAlert() {
         //Not implemented here
+    }
+
+    override fun showSuccess() {
+        TODO("Not yet implemented")
     }
 
     override fun showMembers(teamMembers: List<User>?) {

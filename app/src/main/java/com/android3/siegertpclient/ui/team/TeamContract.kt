@@ -8,7 +8,11 @@ interface TeamContract {
     interface ITeamView : BaseView {
         fun navigateToTournamentActivity()
 
+        fun navigateToHomepageActivity()
+
         fun showDeleteAlert()
+
+        fun showSuccess()
 
         fun showMembers(teamMembers: List<User>?)
 
@@ -33,5 +37,7 @@ interface TeamContract {
         fun onMemberItemClicked(position : Int)
 
         fun onInvitationItemClicked(position : Int)
+
+        fun onDeleteBtnClicked(confirmDelete : String)
     }
 }

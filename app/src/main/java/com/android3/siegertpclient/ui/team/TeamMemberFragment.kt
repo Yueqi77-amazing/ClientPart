@@ -54,7 +54,15 @@ class TeamMemberFragment : Fragment(), TeamContract.ITeamView, UserAdapter.OnUse
         TODO("Not yet implemented")
     }
 
+    override fun navigateToHomepageActivity() {
+        TODO("Not yet implemented")
+    }
+
     override fun showDeleteAlert() {
+        TODO("Not yet implemented")
+    }
+
+    override fun showSuccess() {
         TODO("Not yet implemented")
     }
 

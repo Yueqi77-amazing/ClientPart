@@ -5,13 +5,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.android3.siegertpclient.R
 import com.android3.siegertpclient.data.team.Team
 import com.android3.siegertpclient.data.tournament.Game
 import com.android3.siegertpclient.data.user.User
 import com.android3.siegertpclient.databinding.FragmentDeleteTournamentBinding
 import com.android3.siegertpclient.ui.homepage.HomepageActivity
+import com.android3.siegertpclient.utils.LocalCache
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class DeleteTournamentFragment : Fragment(), TournamentContract.ITournamentView {
     private var _binding: FragmentDeleteTournamentBinding? = null
@@ -24,7 +28,26 @@ class DeleteTournamentFragment : Fragment(), TournamentContract.ITournamentView 
         tournamentPresenter = TournamentPresenter(requireContext())
 
         binding.btnDeleteTournament.setOnClickListener {
-            tournamentPresenter?.onCancelTournamentBtnClicked()
+            doToast("This feature still have problem at server. So it will be disabled for the moment")
+            /*
+            val tournamentName = LocalCache.getCurrentTournamentName(requireContext())
+            val inflater = layoutInflater
+            val dialogLayout = inflater.inflate(R.layout.edit_text_layout, null)
+            val etDelete = dialogLayout.findViewById<EditText>(R.id.et_for_dialog)
+            etDelete.hint = "Type DELETE to confirm"
+
+            MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Delete Team")
+                .setMessage("Are you sure you want to delete tournament $tournamentName? \n(Warning! This action cannot be undone)")
+                .setNegativeButton("Cancel") {dialog, which ->
+                    //Do Nothing
+                }
+                .setPositiveButton("Confirm") {dialog, which ->
+                    tournamentPresenter?.onCancelTournamentBtnClicked(etDelete.text.toString().trim { it <= ' ' })
+                }
+                .setView(dialogLayout)
+                .show()
+             */
         }
 
         return binding.root
@@ -93,8 +116,8 @@ class DeleteTournamentFragment : Fragment(), TournamentContract.ITournamentView 
     }
 
     override fun hideProgress() {
-        binding.pbRequest.visibility = View.VISIBLE
-        binding.btnDeleteTournament.isEnabled = false
+        binding.pbRequest.visibility = View.GONE
+        binding.btnDeleteTournament.isEnabled = true
     }
 
     override fun showError(errorMessage: String) {

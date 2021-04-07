@@ -56,7 +56,7 @@ interface TournamentContract {
 
         fun onCreateGameBtnClicked()
 
-        fun onCancelTournamentBtnClicked()
+        fun onCancelTournamentBtnClicked(confirmCancel : String)
 
         fun isAdmin() : Boolean
     }

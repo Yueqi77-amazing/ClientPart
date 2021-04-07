@@ -44,7 +44,7 @@ class UserProfilePresenter(private val context: Context) :
         localData.putCurrentTournament(chosenTournament)
         localData.putString(KEY_TOURNAMENT_NAME, chosenTournament.tournamentName)
         localData.putString(KEY_TOURNAMENT_ID, chosenTournament.tournamentId)
-        view?.navigateToTeamActivity()
+        view?.navigateToTournamentActivity()
     }
 
     override fun onSettingBtnClicked() {

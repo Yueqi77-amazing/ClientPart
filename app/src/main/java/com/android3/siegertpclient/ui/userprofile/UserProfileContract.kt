@@ -14,6 +14,8 @@ interface UserProfileContract {
 
         fun navigateToTeamActivity()
 
+        fun navigateToTournamentActivity()
+
         fun showMyTournaments(myTournaments : List<Tournament>?)
     }
 

@@ -8,6 +8,7 @@ import com.android3.siegertpclient.data.tournament.Tournament
 import com.android3.siegertpclient.data.tournament.TournamentDetail
 import com.android3.siegertpclient.data.tournament.tournamentsource.TournamentRepo
 import com.android3.siegertpclient.ui.base.BasePresenter
+import com.android3.siegertpclient.utils.Constants
 import com.android3.siegertpclient.utils.Constants.Companion.SINGLE
 import com.android3.siegertpclient.utils.Constants.Companion.TEAM
 import com.android3.siegertpclient.utils.LocalCache
@@ -70,21 +71,27 @@ class TournamentPresenter(private val context: Context) :
                 )
 
                 GlobalScope.launch(Dispatchers.IO) {
+                    Log.d("CheckDetails", "Pr : You are in coroutine")
                     try {
+                        Log.d("CheckDetails", "Pr : You finish update")
                         val tournament = tournamentRepo.updateTournamentDetail(
                             tournamentName,
                             newTournamentDetail
                         )
+                        Log.d("CheckDetails", "Pr : You finish update")
                         if (tournament != null) {
+                            Log.d("CheckDetails", "Pr : not null")
                             withContext(Dispatchers.Main) {
                                 view?.showCurrentTournamentDetails()
                                 view?.hideProgress()
                             }
                         }
                     } catch (e: Exception) {
+                        Log.d("CheckDetails", "Pr : You back in exception")
                         withContext(Dispatchers.Main) {
+                            view?.showError(e.message.toString())
+                            //view?.showError("Oops... It seems there's unexpected error. Please try again.")
                             view?.hideProgress()
-                            view?.showError("Oops... It seems there's unexpected error. Please try again.")
                         }
                     }
                 }
@@ -170,6 +177,8 @@ class TournamentPresenter(private val context: Context) :
     }
 
     override fun onAddParticipantBtnClicked(participant: String) {
+        val participantForm = getCurrentTournament().tournamentDetail.participantForm
+
         if (TextUtils.isEmpty(participant)) {
             view?.showIncompleteInput()
             view?.hideProgress()
@@ -182,11 +191,24 @@ class TournamentPresenter(private val context: Context) :
         }
         GlobalScope.launch(Dispatchers.IO) {
             try {
-                val inviteParticipant = invitationRepo.invite(participant)
-                if (inviteParticipant != null) {
-                    withContext(Dispatchers.Main) {
-                        view?.showSuccess("$inviteParticipant has been invited!")
-                        view?.hideProgress()
+                when (participantForm) {
+                    TEAM -> {
+                        val inviteParticipant = invitationRepo.inviteTeam(participant)
+                        if (inviteParticipant != null) {
+                            withContext(Dispatchers.Main) {
+                                view?.showSuccess("User :: $participant :: has been invited!")
+                                view?.hideProgress()
+                            }
+                        }
+                    }
+                    SINGLE -> {
+                        val inviteParticipant = invitationRepo.inviteUser(participant)
+                        if (inviteParticipant != null) {
+                            withContext(Dispatchers.Main) {
+                                view?.showSuccess("Team :: $participant :: has been invited!")
+                                view?.hideProgress()
+                            }
+                        }
                     }
                 }
             } catch (e: Exception) {
@@ -214,11 +236,16 @@ class TournamentPresenter(private val context: Context) :
         TODO("Not yet implemented")
     }
 
-    override fun onCancelTournamentBtnClicked() {
+    override fun onCancelTournamentBtnClicked(confirmCancel : String) {
         view?.showProgress()
 
         if(!isAdmin()) {
             view?.showError("You have no permission to do the operation")
+            view?.hideProgress()
+            return
+        }
+        if(TextUtils.isEmpty(confirmCancel) or (confirmCancel != Constants.DELETE)) {
+            view?.showError("Tournament deletion cancelled. Please type DELETE to complete")
             view?.hideProgress()
             return
         }
@@ -259,27 +286,27 @@ class TournamentPresenter(private val context: Context) :
     }
 
     private fun validDateDifference(start: String, end: String): Boolean {
-        val startYear = start.substring(0, 3).toInt()
-        val startMonth = start.substring(5, 6).toInt()
-        val startDate = start.substring(8, 9).toInt()
+        val startYear = start.substring(0,4).toInt()
+        val startMonth = start.substring(5,7).toInt()
+        val startDate = start.substring(8,10).toInt()
 
-        val endYear = end.substring(0, 3).toInt()
-        val endMonth = end.substring(5, 6).toInt()
-        val endDate = end.substring(8, 9).toInt()
+        val endYear = end.substring(0,4).toInt()
+        val endMonth = end.substring(5,7).toInt()
+        val endDate = end.substring(8,10).toInt()
 
         if ((endYear - startYear) < 0) {
             return false
         }
 
         if (endYear - startYear == 0) {
-            if (endMonth - startMonth < 0) {
+            if(endMonth - startMonth < 0) {
                 return false
             }
         }
 
         if (endYear - startYear == 0) {
-            if (endMonth - startMonth == 0) {
-                if (endDate - startDate < 0) {
+            if(endMonth - startMonth == 0) {
+                if(endDate - startDate < 0) {
                     return false
                 }
             }

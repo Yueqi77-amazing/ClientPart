@@ -80,8 +80,12 @@ class UserProfileActivity : BaseActivity(), UserProfileContract.IUserProfileView
         //Not implemented here
     }
 
+    override fun navigateToTournamentActivity() {
+        //Not implemented here
+    }
+
     override fun showMyTournaments(myTournaments: List<Tournament>?) {
-        TODO("Not yet implemented")
+        //Not implemented here
     }
 
     override fun showProgress() {

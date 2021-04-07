@@ -67,9 +67,9 @@ class TeamRepo(private val context: Context) {
         return null
     }
 
-    suspend fun deleteTeam(teamName: String) : ApiResponse? {
+    suspend fun deleteTeam() : ApiResponse? {
         val response =
-            teamRemoteDataSource.deleteTeam(LocalCache.getBearerToken(context)!!, LocalCache.getBearerToken(context)!!)
+            teamRemoteDataSource.deleteTeam(LocalCache.getCurrentTeamName(context)!!, LocalCache.getBearerToken(context)!!)
         if (response.isSuccessful) {
             return response.body()!!
         }

@@ -54,8 +54,12 @@ class MyTeamsFragment : Fragment() , UserProfileContract.IUserProfileView,
         startActivity(intent)
     }
 
+    override fun navigateToTournamentActivity() {
+        //Not implemented here
+    }
+
     override fun showMyTournaments(myTournaments: List<Tournament>?) {
-        TODO("Not yet implemented")
+        //Not implemented here
     }
 
     override fun showMyTeams(myTeams: List<Team>?) {

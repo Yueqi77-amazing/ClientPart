@@ -16,7 +16,7 @@ class InvitationRepo(private val context: Context) {
     private val invitationRemoteDataSource = InvitationRemoteDataSource()
     private var localData = PreferencesProvider(context)
 
-    suspend fun invite(recipientUsername: String): ApiResponse? {
+    suspend fun inviteUser(recipientUsername: String): ApiResponse? {
         val currentTournament = localData.getCurrentTournament()!!
 
         val recipientIdResponse = invitationRemoteDataSource.getRecipientIdByUsername(
@@ -26,6 +26,30 @@ class InvitationRepo(private val context: Context) {
 
         if (recipientIdResponse.isSuccessful) {
             val recipientId = recipientIdResponse.body()?.get("userId")
+
+            val sendInvitation = invitationRemoteDataSource.createInvitation(LocalCache.getCurrentUserId(context)!!,
+                recipientId!!,
+                currentTournament.tournamentId,
+                currentTournament.tournamentDetail.participantForm,
+                LocalCache.getBearerToken(context)!!
+            )
+            if(sendInvitation.isSuccessful) {
+                return sendInvitation.body()!!
+            }
+        }
+        return null
+    }
+
+    suspend fun inviteTeam(recipientTeamName: String): ApiResponse? {
+        val currentTournament = localData.getCurrentTournament()!!
+
+        val recipientIdResponse = invitationRemoteDataSource.getRecipientIdByUsername(
+            recipientTeamName,
+            LocalCache.getBearerToken(context)!!
+        )
+
+        if (recipientIdResponse.isSuccessful) {
+            val recipientId = recipientIdResponse.body()?.get("teamId")
 
             val sendInvitation = invitationRemoteDataSource.createInvitation(LocalCache.getCurrentUserId(context)!!,
                 recipientId!!,

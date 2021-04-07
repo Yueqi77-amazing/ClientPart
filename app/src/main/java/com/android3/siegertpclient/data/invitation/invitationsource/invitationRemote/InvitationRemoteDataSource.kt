@@ -35,4 +35,11 @@ class InvitationRemoteDataSource() {
     ): Response<Map<String, String>> {
         return RestClient.invitationService.getRecipientIdByUsername(recipientUsername, token)
     }
+
+    suspend fun getRecipientIdByTeamName(
+        recipientTeamname: String,
+        token: String
+    ): Response<Map<String, String>> {
+        return RestClient.invitationService.getRecipientIdByUsername(recipientTeamname, token)
+    }
 }

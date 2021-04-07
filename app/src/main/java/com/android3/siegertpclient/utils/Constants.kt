@@ -26,6 +26,7 @@ class Constants {
         const val KEY_CURRENT_TEAM = "KEY_CURRENT_TEAM"
         const val KEY_TEAM_ID = "KEY_TEAM_ID"
         const val KEY_TEAM_NAME = "KEY_TEAM_NAME"
+        const val DELETE = "DELETE"
 
         //Invitation
         const val KEY_INVITATION_ID = "KEY_INVITATION_ID"

@@ -101,10 +101,11 @@ class HomepagePresenter(private val context: Context) :
     }
 
     override fun onTournamentOverviewClicked(position: Int) {
-        val savedTournaments = tournamentRepo.getCurrentTournamentList()!!
-
-        val chosenTeamName = savedTournaments[position].tournamentName
-        localData.putString(Constants.KEY_TOURNAMENT_NAME, chosenTeamName)
+        val savedTournaments = tournamentRepo.getCurrentTournamentList()
+        val chosenTournament = savedTournaments[position]
+        localData.putCurrentTournament(chosenTournament)
+        localData.putString(Constants.KEY_TEAM_NAME, chosenTournament.tournamentName)
+        localData.putString(Constants.KEY_TEAM_ID, chosenTournament.tournamentId)
         view?.navigateToTournamentActivity()
     }
 

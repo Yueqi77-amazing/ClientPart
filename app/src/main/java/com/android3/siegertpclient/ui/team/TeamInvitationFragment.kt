@@ -58,8 +58,16 @@ class TeamInvitationFragment : Fragment(), TeamContract.ITeamView, InvitationAda
         startActivity(intent)
     }
 
+    override fun navigateToHomepageActivity() {
+        TODO("Not yet implemented")
+    }
+
     override fun showDeleteAlert() {
         //Not implemented here
+    }
+
+    override fun showSuccess() {
+        TODO("Not yet implemented")
     }
 
     override fun showMembers(teamMembers: List<User>?) {

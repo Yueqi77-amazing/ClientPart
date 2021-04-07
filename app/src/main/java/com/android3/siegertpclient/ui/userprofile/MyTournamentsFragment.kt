@@ -12,6 +12,7 @@ import com.android3.siegertpclient.data.tournament.Tournament
 import com.android3.siegertpclient.databinding.FragmentMytournamentsBinding
 import com.android3.siegertpclient.ui.homepage.HomepageActivity
 import com.android3.siegertpclient.ui.setting.SettingsActivity
+import com.android3.siegertpclient.ui.tournament.TournamentActivity
 import com.android3.siegertpclient.utils.LocalCache
 import com.android3.siegertpclient.utils.recyclerviewadapters.TournamentAdapter
 import java.time.LocalDate
@@ -88,6 +89,11 @@ class MyTournamentsFragment : Fragment(), UserProfileContract.IUserProfileView,
 
     override fun navigateToTeamActivity() {
         //Not implemented here
+    }
+
+    override fun navigateToTournamentActivity() {
+        val intent = Intent(activity, TournamentActivity::class.java)
+        startActivity(intent)
     }
 
     override fun showMyTournaments(myTournaments: List<Tournament>?) {

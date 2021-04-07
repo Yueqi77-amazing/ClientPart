@@ -1,12 +1,14 @@
 package com.android3.siegertpclient.ui.team
 
 import android.content.Context
+import android.text.TextUtils
 import com.android3.siegertpclient.data.invitation.invitationsource.InvitationRepo
 import com.android3.siegertpclient.data.team.teamsource.TeamRepo
 import com.android3.siegertpclient.data.tournament.tournamentsource.TournamentRepo
 import com.android3.siegertpclient.data.user.usersource.UserRepo
 import com.android3.siegertpclient.ui.base.BasePresenter
 import com.android3.siegertpclient.utils.Constants
+import com.android3.siegertpclient.utils.Constants.Companion.DELETE
 import com.android3.siegertpclient.utils.OnlineChecker
 import com.android3.siegertpclient.utils.PreferencesProvider
 import kotlinx.coroutines.Dispatchers
@@ -106,7 +108,7 @@ class TeamPresenter(private val context: Context) : BasePresenter<TeamContract.I
     }
 
     override fun onHomeBtnClicked() {
-        TODO("Not yet implemented")
+        view?.navigateToHomepageActivity()
     }
 
     override fun onTournamentItemClicked(position: Int) {
@@ -134,6 +136,38 @@ class TeamPresenter(private val context: Context) : BasePresenter<TeamContract.I
             localData.putString(Constants.KEY_TOURNAMENT_NAME, tournament?.tournamentName!!)
             withContext(Dispatchers.Main) {
                 view?.navigateToTournamentActivity()
+            }
+        }
+    }
+
+    override fun onDeleteBtnClicked(confirmDelete : String) {
+        when {
+            TextUtils.isEmpty(confirmDelete) or (confirmDelete != DELETE) -> {
+                view?.showError("Team deletion cancelled. Please type DELETE to complete")
+                view?.hideProgress()
+            }
+            !onlineChecker.isOnline() -> {
+                view?.showNoInternetConnection()
+                view?.hideProgress()
+            }
+            else -> {
+                GlobalScope.launch(Dispatchers.IO) {
+                    try {
+                        val teamMembers = teamRepo.deleteTeam()
+                        if (teamMembers != null) {
+                            withContext(Dispatchers.Main) {
+                                view?.showSuccess()
+                                view?.hideProgress()
+                                view?.navigateToHomepageActivity()
+                            }
+                        }
+                    } catch (e: Exception) {
+                        withContext(Dispatchers.Main) {
+                            view?.showError("Oops... It seems there's unexpected error. Please try again.")
+                            view?.hideProgress()
+                        }
+                    }
+                }
             }
         }
     }
